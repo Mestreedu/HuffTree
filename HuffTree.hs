@@ -28,9 +28,9 @@ ordena [] = []
 ordena (x:xs) = ordena[y|y<- xs,(snd y)<(snd x)] ++ [x]++ ordena[y|y<- xs,snd y>=(snd x)]
 
 --Estrutura de árvore
-data Arvore a = No a (Arvore a) (Arvore a)|Folha a
+data Arvore a = No a (Arvore a) (Arvore a)|Folha a|Null deriving (Show)
 
---Soma duas folhas
+--Soma dois elementos
 somaFilhos:: Arvore ([Char],Int)-> Arvore ([Char],Int)->Arvore ([Char],Int)
 somaFilhos a b = No (aglutina (transform a) (transform b)) (a) (b)
 
@@ -47,10 +47,22 @@ montaFolhas x = (tuplaFolha (head (ordena(montaTabela x)))):(montaFolhas  (tail 
 aglutina::([Char],Int)->([Char],Int)->([Char],Int)
 aglutina a b = (fst a ++ fst b, (snd a)+(snd b))
 
+--Ordena elementos da lista de árvores. Quicksort
+ordenaArv:: [Arvore ([Char],Int)]->[Arvore ([Char],Int)]
+ordenaArv [] = []
+ordenaArv (x:xs) =ordenaArv[y|y<-xs,(snd $ getTupla y)<(snd $getTupla x)]++[x] ++ ordenaArv[y|y<-xs,(snd $ getTupla y)>= (snd $getTupla x)]
+
+--Função para auxiliar a ordenação da lista de árvores, utilizada para acessar os valores das tuplas.
+getTupla (No a _ _) = a
 --Serializa o valor da árvore. Para manipular as tuplas
-transform:: Arvore (String,Int)-> (String,Int)
+transform:: Arvore ([Char],Int)-> ([Char],Int)
 transform (Folha a) = a
 transform (No a f1 f2) = a  
+
+fazArvore:: [Arvore ([Char],Int)]-> [Arvore ([Char],Int)]
+fazArvore (x:[]) = [x]
+fazArvore (x:xs:xxs) =  fazArvore $ ordenaArv[y| y<-(((somaFilhos x xs):(fazArvore xxs)))]
+
 
 --montaPai::[Arvore ([Char],Int)]->[Arvore ([Char],Int)]->Arvore ([Char],Int)
 --montaPai a b = somaFilhos a b
@@ -68,29 +80,22 @@ transform (No a f1 f2) = a
 --aux(No esquerda direita) ('1':string) = aux direita string
 
 
-data Arvore2  = Leaf Char Int
-            | Fork Arvore2 Arvore2 Int
-            deriving (Show)
+--data Arvore2  = Leaf Char Int
+--            | Fork Arvore2 Arvore2 Int
+--            deriving (Show)
 
---Peso de cada folha e cada "garfo" (nó pai de um conjunto de folhas que contém o numero de ocorrências de seus filhos)
-peso :: Arvore2 -> Int
-peso (Leaf _ w)    = w
-peso (Fork _ _ w) = w
+--peso :: Arvore2 -> Int
+--peso (Leaf _ w)    = w
+--peso (Fork _ _ w) = w
 
---Basicamente o método merge que serve como função auxiliar na construção da arvore
-intercalar t1 t2 = Fork t1 t2 (peso t1 + peso t2)
+--intercalar t1 t2 = Fork t1 t2 (peso t1 + peso t2)
 
---Lista de ocorrências de cada letra da String recebida
-freqLista :: String -> [(Char, Int)]
-freqLista = M.toList . M.fromListWith (+) . map (flip (,) 1)
+--freqLista :: String -> [(Char, Int)]
+--freqLista = M.toList . M.fromListWith (+) . map (flip (,) 1)
 
---Monta arvore recebendo uma lista de tuplas com cada tupla contendo um caractere e um numero
-montarArvore :: [(Char, Int)] -> Arvore2
-montarArvore = construa . map (uncurry Leaf) . sortBy (compare `on` snd)
-    where  construa (x:[])    = x
-           construa (a:b:xs) = construa $ insertBy (compare `on` peso) (intercalar a b) xs
+--montarArvore :: [(Char, Int)] -> Arvore2
+--montarArvore = construa . map (uncurry Leaf) . sortBy (compare `on` snd)
+--    where  construa (x:[])    = x
+--           construa (a:b:xs) = construa $ insertBy (compare `on` peso) (intercalar a b) xs
 
 
---Gera arvore a partir de uma String
-arvorePorString :: String -> Arvore2
-arvorePorString = montarArvore . freqLista
