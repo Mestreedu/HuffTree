@@ -72,18 +72,25 @@ data Arvore2  = Leaf Char Int
             | Fork Arvore2 Arvore2 Int
             deriving (Show)
 
+--Peso de cada folha e cada "garfo" (nó pai de um conjunto de folhas que contém o numero de ocorrências de seus filhos)
 peso :: Arvore2 -> Int
 peso (Leaf _ w)    = w
 peso (Fork _ _ w) = w
 
+--Basicamente o método merge que serve como função auxiliar na construção da arvore
 intercalar t1 t2 = Fork t1 t2 (peso t1 + peso t2)
 
+--Lista de ocorrências de cada letra da String recebida
 freqLista :: String -> [(Char, Int)]
 freqLista = M.toList . M.fromListWith (+) . map (flip (,) 1)
 
+--Monta arvore recebendo uma lista de tuplas com cada tupla contendo um caractere e um numero
 montarArvore :: [(Char, Int)] -> Arvore2
 montarArvore = construa . map (uncurry Leaf) . sortBy (compare `on` snd)
     where  construa (x:[])    = x
            construa (a:b:xs) = construa $ insertBy (compare `on` peso) (intercalar a b) xs
 
 
+--Gera arvore a partir de uma String
+arvorePorString :: String -> Arvore2
+arvorePorString = montarArvore . freqLista
