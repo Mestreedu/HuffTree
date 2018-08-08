@@ -5,22 +5,6 @@ import Data.List
 import qualified Data.Map as M
 import Data.Function
 
-class Eq a => Bits a where
-    zer :: a
-    one :: a
- 
-
-type Codemap a = M.Map Char [a]
- 
-
-instance Bits Bool where
-     zer = False
-     one = True
-
-instance Bits Int where
-     zer = 0
-     one = 1
-
 --Monta a tabela de uma determinada string
 montaTabela:: String->[([Char],Int)]
 montaTabela a = zip (map (goList)(tiraRep a)) (contaRep a)
@@ -43,7 +27,11 @@ ordena [] = []
 ordena (x:xs) = ordena[y|y<- xs,(snd y)<(snd x)] ++ [x]++ ordena[y|y<- xs,snd y>=(snd x)]
 
 --Estrutura de árvore
+<<<<<<< HEAD
 data Arvore a = No a (Arvore a) (Arvore a) |Folha a |Null deriving (Show)
+=======
+data Arvore a = No a (Arvore a) (Arvore a)|Folha a deriving (Show)
+>>>>>>> 7b14b9d0eee0af30ab3555ac53aab0e057b69355
 
 --Soma dois elementos
 somaFilhos:: Arvore ([Char],Int)-> Arvore ([Char],Int)->Arvore ([Char],Int)
@@ -74,10 +62,21 @@ transform:: Arvore ([Char],Int)-> ([Char],Int)
 transform (Folha a) = a
 transform (No a f1 f2) = a  
 
+--Monta a Arvore
 fazArvore:: [Arvore ([Char],Int)]-> [Arvore ([Char],Int)]
-fazArvore ([]) = []
+fazArvore [] = []
 fazArvore (x:[]) = [x]
 fazArvore (x:xs:xxs) =  fazArvore $ ordenaArv[y| y<-(((somaFilhos x xs):(fazArvore xxs)))]
+
+--Monta lista de char e seus respectivos 
+--montaTable::[Arvore a]->String->[(Char,String)]
+--montaTable [] _ = []
+--montaTable (x:xs) nome = 
+
+--Percorre em pré-ordem. Raiz esquerda direita
+--percorre:: Arvore a ->Char->String
+--percorre (Folha a) c = if head (fst a) == c
+--percorre(No n esq dir) = n:percorre esq ++ percorre dir
 
 
 --montaPai::[Arvore ([Char],Int)]->[Arvore ([Char],Int)]->Arvore ([Char],Int)
