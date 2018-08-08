@@ -69,25 +69,27 @@ fazArvore (x:[]) = [x]
 fazArvore (x:xs:xxs) =  fazArvore $ ordenaArv[y| y<-(((somaFilhos x xs):(fazArvore xxs)))]
 
 --Monta lista de char e suas representações binárias
-montaTable::[Arvore a]->String->[(Char,String)]
-montaTable [] _ = []
+montaTable::Arvore ([Char],Int)->String->[(Char,String)]
 montaTable _ [] = []
-montaTable (t:ts) (x:xs) = (x,(percorre t x)):montaTable ts xs
+montaTable t (x:xs) = (x,(percorre t x)):montaTable t xs
 
 --Percorre a arvore
-percorre:: Arvore a ->Char->String
+percorre:: Arvore ([Char],Int) ->Char->String
 percorre (Folha a) c = []
 percorre (No n esq dir) c 
-        |elem c $ fst(transform esq c) = '0':(percorre esq c)
+        |elem c $ fst(transform esq) = '0':(percorre esq c)
         |otherwise = '1':(percorre dir c)
 
- 
+ --principal::String->[(Char,String)]
+ --principal palavra = montaTable $ head (fazArvore $ montaFolhas palavra) palavra
+
+
 ---Decodificando uma string binária
-decodifica::Arvore a->String->String
-decodifica raiz string = aux raiz string where
-   aux(Folha c) string = c:(aux raiz string)
-   aux arv "" = ""
-   aux(No a esquerda direita) ('0':string) = aux esquerda string
-   aux(No a esquerda direita) ('1':string) = aux direita string
-   aux(No a esquerda direita) ('1':string) = aux direita string
+--decodifica::Arvore ([Char],Int)->String->String
+--decodifica raiz string = aux raiz string where
+--   aux(Folha c) string = c:(aux raiz string)
+--   aux arv "" = ""
+--   aux(No a esquerda direita) ('0':string) = aux esquerda string
+--   aux(No a esquerda direita) ('1':string) = aux direita string
+--   aux(No a esquerda direita) ('1':string) = aux direita string
 
