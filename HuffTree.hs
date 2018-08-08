@@ -89,3 +89,4 @@ aux(Folha c) string = c:(aux raiz string)
 aux arv "" = ""
 aux(No esquerda direita) ('0':string) = aux esquerda string
 aux(No esquerda direita) ('1':string) = aux direita string
+aux(No esquerda direita) ('1':string) = aux direita string
