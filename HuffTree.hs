@@ -75,13 +75,6 @@ fazArvore (x:xs:xxs) =  fazArvore $ ordenaArv[y| y<-(((somaFilhos x xs):(fazArvo
 --percorre(No n esq dir) = n:percorre esq ++ percorre dir
 
 
---montaPai::[Arvore ([Char],Int)]->[Arvore ([Char],Int)]->Arvore ([Char],Int)
---montaPai a b = somaFilhos a b
-
---Monta a Arvore
---montaArvore::[Arvore ([Char],Int)]->[Arvore([Char],Int)]
---montaArvore [] = []
---montaArvore (x:xs:xxs) = No (montaPai x xs)
 ---Decodificando uma string binária
 --decodifica::Arvore->String->String
 --decodifica raiz string = aux raiz string where
