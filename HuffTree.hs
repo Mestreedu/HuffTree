@@ -27,11 +27,7 @@ ordena [] = []
 ordena (x:xs) = ordena[y|y<- xs,(snd y)<(snd x)] ++ [x]++ ordena[y|y<- xs,snd y>=(snd x)]
 
 --Estrutura de árvore
-<<<<<<< HEAD
-data Arvore a = No a (Arvore a) (Arvore a) |Folha a |Null deriving (Show)
-=======
 data Arvore a = No a (Arvore a) (Arvore a)|Folha a deriving (Show)
->>>>>>> 7b14b9d0eee0af30ab3555ac53aab0e057b69355
 
 --Soma dois elementos
 somaFilhos:: Arvore ([Char],Int)-> Arvore ([Char],Int)->Arvore ([Char],Int)
@@ -93,42 +89,3 @@ fazArvore (x:xs:xxs) =  fazArvore $ ordenaArv[y| y<-(((somaFilhos x xs):(fazArvo
 --aux arv "" = ""
 --aux(No esquerda direita) ('0':string) = aux esquerda string
 --aux(No esquerda direita) ('1':string) = aux direita string
-
-
-data Arvore2  = Leaf Char Int
-            | Fork Arvore2 Arvore2 Int
-            deriving (Show)
-
-peso :: Arvore2 -> Int
-peso (Leaf _ w)    = w
-peso (Fork _ _ w) = w
-
-intercalar t1 t2 = Fork t1 t2 (peso t1 + peso t2)
-
-freqLista :: String -> [(Char, Int)]
-freqLista = M.toList . M.fromListWith (+) . map (flip (,) 1)
-
-montarArvore :: [(Char, Int)] -> Arvore2
-montarArvore = construa . map (uncurry Leaf) . sortBy (compare `on` snd)
-    where  construa (x:[])    = x
-           construa (a:b:xs) = construa $ insertBy (compare `on` peso) (intercalar a b) xs
-
-
-buildCodemap :: Bits a => Arvore2 -> Codemap a
-buildCodemap = M.fromList . buildCodelist
-     where  buildCodelist (Leaf c w)    = [(c, [])]
-            buildCodelist (Fork l r w)  = map (addBit zer) (buildCodelist l) ++ map (addBit one) (buildCodelist r)
-              where addBit b = second (b :)
-
-stringTree :: String -> Arvore2
-stringTree = montarArvore . freqLista
-
-
-stringCodemap :: Bits a => String -> Codemap a
-stringCodemap = buildCodemap . stringTree
-
-encode :: Bits a => Codemap a -> String -> [a]
-encode m = concat . map (m M.!)
- 
-encode' :: Bits a => Arvore2 -> String -> [a]
-encode' t = encode $ buildCodemap t
