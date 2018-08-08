@@ -52,7 +52,11 @@ ordenaArv [] = []
 ordenaArv (x:xs) =ordenaArv[y|y<-xs,(snd $ getTupla y)<(snd $getTupla x)]++[x] ++ ordenaArv[y|y<-xs,(snd $ getTupla y)>= (snd $getTupla x)]
 
 --Função para auxiliar a ordenação da lista de árvores, utilizada para acessar os valores das tuplas.
-getTupla (No a  ) = a
+getTupla:: Arvore ([Char],Int)->([Char],Int)
+getTupla (Folha a) = a
+getTupla (No a _ _) = a
+
+
 --Serializa o valor da árvore. Para manipular as tuplas
 transform:: Arvore ([Char],Int)-> ([Char],Int)
 transform (Folha a) = a
@@ -64,21 +68,24 @@ fazArvore [] = []
 fazArvore (x:[]) = [x]
 fazArvore (x:xs:xxs) =  fazArvore $ ordenaArv[y| y<-(((somaFilhos x xs):(fazArvore xxs)))]
 
---Monta lista de char e seus respectivos 
---montaTable::[Arvore a]->String->[(Char,String)]
---montaTable [] _ = []
---montaTable (x:xs) nome = 
+--Monta lista de char e suas representações binárias
+montaTable::[Arvore a]->String->[(Char,String)]
+montaTable [] _ = []
+montaTable _ [] = []
+montaTable (t:ts) (x:xs) = (x,(percorre t x)):montaTable ts xs
 
---Percorre em pré-ordem. Raiz esquerda direita
---percorre:: Arvore a ->Char->String
---percorre (Folha a) c = if head (fst a) == c
---percorre(No n esq dir) = n:percorre esq ++ percorre dir
+--Percorre a arvore
+percorre:: Arvore a ->Char->String
+percorre (Folha a) c = []
+percorre (No n esq dir) c 
+        |elem c $ fst(transform esq) = '0':(percorre esq c)
+        |otherwise = '1':(percorre dir c)
 
-
+ 
 ---Decodificando uma string binária
---decodifica::Arvore->String->String
---decodifica raiz string = aux raiz string where
---aux(Folha c) string = c:(aux raiz string)
---aux arv "" = ""
---aux(No esquerda direita) ('0':string) = aux esquerda string
---aux(No esquerda direita) ('1':string) = aux direita string
+decodifica::Arvore a->String->String
+decodifica raiz string = aux raiz string where
+aux(Folha c) string = c:(aux raiz string)
+aux arv "" = ""
+aux(No esquerda direita) ('0':string) = aux esquerda string
+aux(No esquerda direita) ('1':string) = aux direita string
