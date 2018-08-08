@@ -28,7 +28,7 @@ ordena [] = []
 ordena (x:xs) = ordena[y|y<- xs,(snd y)<(snd x)] ++ [x]++ ordena[y|y<- xs,snd y>=(snd x)]
 
 --Estrutura de árvore
-data Arvore a = No a (Arvore a) (Arvore a)|Folha a|Null deriving (Show)
+data Arvore a = No a (Arvore a) (Arvore a)|Folha a deriving (Show)
 
 --Soma dois elementos
 somaFilhos:: Arvore ([Char],Int)-> Arvore ([Char],Int)->Arvore ([Char],Int)
@@ -59,9 +59,21 @@ transform:: Arvore ([Char],Int)-> ([Char],Int)
 transform (Folha a) = a
 transform (No a f1 f2) = a  
 
+--Monta a Arvore
 fazArvore:: [Arvore ([Char],Int)]-> [Arvore ([Char],Int)]
+fazArvore [] = []
 fazArvore (x:[]) = [x]
 fazArvore (x:xs:xxs) =  fazArvore $ ordenaArv[y| y<-(((somaFilhos x xs):(fazArvore xxs)))]
+
+--Monta lista de char e seus respectivos 
+--montaTable::[Arvore a]->String->[(Char,String)]
+--montaTable [] _ = []
+--montaTable (x:xs) nome = 
+
+--Percorre em pré-ordem. Raiz esquerda direita
+--percorre:: Arvore a ->Char->String
+--percorre (Folha a) c = if head (fst a) == c
+--percorre(No n esq dir) = n:percorre esq ++ percorre dir
 
 
 --montaPai::[Arvore ([Char],Int)]->[Arvore ([Char],Int)]->Arvore ([Char],Int)
