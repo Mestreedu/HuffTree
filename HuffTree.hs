@@ -78,15 +78,16 @@ montaTable (t:ts) (x:xs) = (x,(percorre t x)):montaTable ts xs
 percorre:: Arvore a ->Char->String
 percorre (Folha a) c = []
 percorre (No n esq dir) c 
-        |elem c $ fst(transform esq) = '0':(percorre esq c)
+        |elem c $ fst(transform esq c) = '0':(percorre esq c)
         |otherwise = '1':(percorre dir c)
 
  
 ---Decodificando uma string binária
 decodifica::Arvore a->String->String
 decodifica raiz string = aux raiz string where
-aux(Folha c) string = c:(aux raiz string)
-aux arv "" = ""
-aux(No esquerda direita) ('0':string) = aux esquerda string
-aux(No esquerda direita) ('1':string) = aux direita string
-aux(No esquerda direita) ('1':string) = aux direita string
+   aux(Folha c) string = c:(aux raiz string)
+   aux arv "" = ""
+   aux(No a esquerda direita) ('0':string) = aux esquerda string
+   aux(No a esquerda direita) ('1':string) = aux direita string
+   aux(No a esquerda direita) ('1':string) = aux direita string
+
