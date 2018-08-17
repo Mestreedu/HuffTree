@@ -69,9 +69,9 @@ fazArvore (x:[]) = [x]
 fazArvore (x:xs:xxs) =  fazArvore $ ordenaArv[y| y<-(((somaFilhos x xs):(fazArvore xxs)))]
 
 --Monta lista de char e suas representações binárias
-montaTable::Arvore ([Char],Int)->String->[(Char,String)]
+montaTable::[Arvore ([Char],Int)]->String->[(Char,String)]
 montaTable _ [] = []
-montaTable t (x:xs) = (x,(percorre t x)):montaTable t xs
+montaTable t (x:xs) = (x,(percorre (head t) x)):montaTable t xs
 
 --Percorre a arvore
 percorre:: Arvore ([Char],Int) ->Char->String
@@ -80,16 +80,26 @@ percorre (No n esq dir) c
         |elem c $ fst(transform esq) = '0':(percorre esq c)
         |otherwise = '1':(percorre dir c)
 
- --principal::String->[(Char,String)]
- --principal palavra = montaTable $ head (fazArvore $ montaFolhas palavra) palavra
+
+montaString:: [(Char,String)]->String
+montaString [] = []
+montaString (x:xs) = (snd x)++(montaString xs)
 
 
----Decodificando uma string binária
---decodifica::Arvore ([Char],Int)->String->String
---decodifica raiz string = aux raiz string where
---   aux(Folha c) string = c:(aux raiz string)
---   aux arv "" = ""
---   aux(No a esquerda direita) ('0':string) = aux esquerda string
---   aux(No a esquerda direita) ('1':string) = aux direita string
---   aux(No a esquerda direita) ('1':string) = aux direita string
 
+--Decodificando uma string binária
+--Ta dando erro e n ta coisando o ultimo charactere
+decodifica::[Arvore ([Char],Int)]->String->String 
+decodifica (x:xs) s = percorreAux x s where
+--percorreaux::Arvore ([Char],Int)->String->String
+ percorreAux x [] = []
+ percorreAux (Folha a) string = (head $ fst a):(percorreAux x string)
+ percorreAux (No n esq dir) ('0':string) = percorreAux esq string
+ percorreAux (No n esq dir) ('1':string) = percorreAux dir string
+
+
+--variaveis de teste
+--let nome = "Felipe"
+--let arvore = fazArvore $ montaFolhas nome
+--let tabela = montaTable arvore nome
+--let string = montaString tabela
